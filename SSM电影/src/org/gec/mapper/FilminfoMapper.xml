@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gec.mapper.FilminfoMapper" >
+  <!-- 启动二级缓存 -->
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <resultMap id="BaseResultMap" type="org.gec.pojo.Filminfo" >
+    <id column="FILMID" property="filmid" jdbcType="INTEGER" />
+    <result column="FILMNAME" property="filmname" jdbcType="VARCHAR" />
+    <result column="TYPEID" property="typeid" jdbcType="INTEGER" />
+    <result column="ACTOR" property="actor" jdbcType="VARCHAR" />
+    <result column="DIRECTOR" property="director" jdbcType="VARCHAR" />
+    <result column="TICKETPRICE" property="ticketprice" jdbcType="DECIMAL" />
+    <result column="pic" property="pic" jdbcType="VARCHAR" />
+
+    <association property="filmtype" column="typeid" select="org.gec.mapper.FilmtypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    FILMID, FILMNAME, TYPEID, ACTOR, DIRECTOR, TICKETPRICE, pic
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.gec.pojo.FilminfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from filminfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from filminfo
+    where FILMID = #{filmid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from filminfo
+    where FILMID = #{filmid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.gec.pojo.FilminfoExample" >
+    delete from filminfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.gec.pojo.Filminfo" >
+    insert into filminfo (FILMID, FILMNAME, TYPEID, 
+      ACTOR, DIRECTOR, TICKETPRICE, 
+      pic)
+    values (#{filmid,jdbcType=INTEGER}, #{filmname,jdbcType=VARCHAR}, #{typeid,jdbcType=INTEGER}, 
+      #{actor,jdbcType=VARCHAR}, #{director,jdbcType=VARCHAR}, #{ticketprice,jdbcType=DECIMAL}, 
+      #{pic,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.gec.pojo.Filminfo" >
+    insert into filminfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="filmid != null" >
+        FILMID,
+      </if>
+      <if test="filmname != null" >
+        FILMNAME,
+      </if>
+      <if test="typeid != null" >
+        TYPEID,
+      </if>
+      <if test="actor != null" >
+        ACTOR,
+      </if>
+      <if test="director != null" >
+        DIRECTOR,
+      </if>
+      <if test="ticketprice != null" >
+        TICKETPRICE,
+      </if>
+      <if test="pic != null" >
+        pic,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="filmid != null" >
+        #{filmid,jdbcType=INTEGER},
+      </if>
+      <if test="filmname != null" >
+        #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="actor != null" >
+        #{actor,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null" >
+        #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketprice != null" >
+        #{ticketprice,jdbcType=DECIMAL},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.gec.pojo.FilminfoExample" resultType="java.lang.Integer" >
+    select count(*) from filminfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update filminfo
+    <set >
+      <if test="record.filmid != null" >
+        FILMID = #{record.filmid,jdbcType=INTEGER},
+      </if>
+      <if test="record.filmname != null" >
+        FILMNAME = #{record.filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.typeid != null" >
+        TYPEID = #{record.typeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.actor != null" >
+        ACTOR = #{record.actor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.director != null" >
+        DIRECTOR = #{record.director,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ticketprice != null" >
+        TICKETPRICE = #{record.ticketprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.pic != null" >
+        pic = #{record.pic,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update filminfo
+    set FILMID = #{record.filmid,jdbcType=INTEGER},
+      FILMNAME = #{record.filmname,jdbcType=VARCHAR},
+      TYPEID = #{record.typeid,jdbcType=INTEGER},
+      ACTOR = #{record.actor,jdbcType=VARCHAR},
+      DIRECTOR = #{record.director,jdbcType=VARCHAR},
+      TICKETPRICE = #{record.ticketprice,jdbcType=DECIMAL},
+      pic = #{record.pic,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.gec.pojo.Filminfo" >
+    update filminfo
+    <set >
+      <if test="filmname != null" >
+        FILMNAME = #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null" >
+        TYPEID = #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="actor != null" >
+        ACTOR = #{actor,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null" >
+        DIRECTOR = #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketprice != null" >
+        TICKETPRICE = #{ticketprice,jdbcType=DECIMAL},
+      </if>
+      <if test="pic != null" >
+        pic = #{pic,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FILMID = #{filmid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.gec.pojo.Filminfo" >
+    update filminfo
+    set FILMNAME = #{filmname,jdbcType=VARCHAR},
+      TYPEID = #{typeid,jdbcType=INTEGER},
+      ACTOR = #{actor,jdbcType=VARCHAR},
+      DIRECTOR = #{director,jdbcType=VARCHAR},
+      TICKETPRICE = #{ticketprice,jdbcType=DECIMAL},
+      pic = #{pic,jdbcType=VARCHAR}
+    where FILMID = #{filmid,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryInfos" resultMap="info_map" parameterType="org.gec.pojo.Filminfo">
+      select * from filminfo
+      <where>
+        <if test="typeid != 0"> typeid = #{typeid}</if>
+        <if test="actor != null and actor != ''"> and actor like #{actor}</if>
+        <if test="director != null and director != ''"> and director like #{director}</if>
+        <if test="bigprice != null"> and ticketprice >=  #{bigprice}</if>
+        <if test="filmname != null and filmname != ''"> and filmname like #{filmname}</if>
+      </where>
+  </select>
+
+  <resultMap id="info_map" type="org.gec.pojo.Filminfo">
+    <id property="typeid" column="typeid"/>
+    <association property="filmtype" column="typeid" select="org.gec.mapper.FilmtypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+</mapper>
